@@ -10,6 +10,12 @@ router.get('/', function(req, res, next) {
   res.render('pictures', { pictures: pictures});
 });
 
+router.get('/:pictureName', (req, res) => {
+  const pictureName = req.params.pictureName
+  res.render('pictureDetails', { picture: pictureName});
+
+});
+
 router.post('/', function(req, res, next) {
   const file = req.files.file;
   fs.writeFileSync(path.join(__dirname, '../pictures/', file.name), file.data);
