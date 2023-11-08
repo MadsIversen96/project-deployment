@@ -29,8 +29,15 @@ router.get('/', requiresAuth(), async function(req, res, next) {
   res.render('pictures', { pictures: pictures});
 });
 
-router.get('/:pictureName', (req, res) => {
-  const pictureName = req.params.pictureName
+router.get('/:pictureName', requiresAuth(), async (req, res) => {
+  let my_file = await s3.getObject({
+    Bucket: process.env.CYCLIC_BUCKET_NAME,
+    Key: "public/"+req.params.pictureName
+  }).promise();
+  const pictureName = {
+    src: Buffer.from(my_file.Body).toString('base64'),
+    name: req.params.pictureName
+  }
   res.render('pictureDetails', { picture: pictureName});
 
 });
